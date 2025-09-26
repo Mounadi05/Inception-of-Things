@@ -1,0 +1,18 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name : Install k3s
+      shell: 'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --node-ip=192.168.56.110 --tls-san=192.168.56.110" sh -'
+    
+    - name: Wait for pods to be ready
+      command: sudo kubectl wait --for=condition=Available deployments --all -n kube-system --timeout=160s
+      register: wait_result
+      until: wait_result.rc == 0
+      retries: 3
+      delay: 3
+
+    - name : Craete Namespace
+      command: sudo kubectl apply -R -f /vagrant/config/namespace.yaml
+
+    - name: Deploy apps
+      command: sudo kubectl apply -R -f /vagrant/config/
