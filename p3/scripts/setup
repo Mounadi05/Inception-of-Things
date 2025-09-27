@@ -61,14 +61,14 @@ kubectl create secret generic private-repo-credentials \
   --namespace=argocd \
   --from-literal=username=$GITHUB_USER \
   --from-literal=password=$GITHUB_TOKEN \
-  --from-literal=url='https://github.com/Mounadi05/myapp.git' 
+  --from-literal=url='https://github.com/Mounadi05/amounadi.git' 
 
 kubectl label secret private-repo-credentials \
   --namespace=argocd 'argocd.argoproj.io/secret-type=repository'
 
 
 echo "--> Applying Argo CD Application..."
-kubectl apply -f config/deploy.yaml
+kubectl apply -f ../config/deploy.yaml
 
 while [[ $(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o 'jsonpath={.items[0].status.phase}') != "Running" ]]; do
   echo "[*] Waiting for argocd-server ..."

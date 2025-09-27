@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Mounadi05/myapp.git
+    repoURL: https://github.com/Mounadi05/amounadi.git
     targetRevision: HEAD
     path: .
   destination:
