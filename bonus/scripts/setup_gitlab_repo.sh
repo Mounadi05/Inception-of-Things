@@ -30,8 +30,8 @@ until curl --silent --head --fail "${GITLAB_HEALTH_URL}" > /dev/null; do
         echo "FATAL: GitLab did not become ready within the time limit. Exiting."
         exit 1
     fi
-    echo "  [.] GitLab not ready yet (Attempt $RETRY_COUNT). Waiting 20 seconds..."
-    sleep 20
+    echo "  [.] GitLab not ready yet (Attempt $RETRY_COUNT). Waiting 30 seconds..."
+    sleep 30
     RETRY_COUNT=$((RETRY_COUNT + 1))
 done
 
@@ -75,12 +75,13 @@ echo "                 PUSHING LOCAL REPO TO GITLAB"
 echo "------------------------------------------------------------------"
 # Get the SSH URL for the repository from the GitLab API
 
+
 SSH_URL_REPO=$(curl --silent --header "PRIVATE-TOKEN: ${TOKEN_GITLAB}" "${GITLAB_URL}/api/v4/projects/${PROJECT_ID}" \
   | jq -r .ssh_url_to_repo \
   | sed "s|git@${IP_ADDRESS}:|ssh://git@${IP_ADDRESS}:${PORT_SSH}/|")
 
 
-echo $SSH_URL_REPO
+echo "ssh_repo :${SSH_URL_REPO}"
 # Initialize the local directory as a Git repo
 mkdir -p "$LOCAL_REPO_DIR"
 cp $APP_DEPLOY_DIR/* $LOCAL_REPO_DIR
@@ -97,11 +98,9 @@ if [ ! -d ".git" ]; then
 fi
 
 # Configure git to use the new SSH key and push to the repository
-GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" git remote set-url origin "${SSH_URL_REPO}" 2>/dev/null || GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" git remote add origin "${SSH_URL_REPO}"
-GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" git push -u origin main
+GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git remote set-url origin "${SSH_URL_REPO}" 2>/dev/null || GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git remote add origin "${SSH_URL_REPO}"
+GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git push -u origin main
 
-rm $ENV_FILE
-touch $ENV_FILE
 
 echo "✅ update configuration to $ENV_FILE"
 
@@ -109,7 +108,9 @@ cat <<EOF > $ENV_FILE
 # GitLab Configuration Saved on $(date)
 TOKEN_GITLAB=$TOKEN_GITLAB
 GITLAB_USER=root
+IP=$IP_ADDRESS
 EOF
+
 echo "✅ Configuration successfully updated to $ENV_FILE"
 echo ""
 

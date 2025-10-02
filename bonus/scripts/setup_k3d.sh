@@ -15,7 +15,7 @@
 NAMESPACE="argocd"
 FORWARD_PORT=5555
 
-ENV_FILE="./.env" 
+ENV_FILE="./myapp/.env" 
 
 set -e
 
@@ -25,7 +25,8 @@ if [ -f "$ENV_FILE" ]; then
     
     GITLAB_USER=$GITLAB_USER
     GITLAB_TOKEN=$TOKEN_GITLAB
-
+    IP=$IP
+    echo $IP $GITLAB_TOKEN $GITLAB_USER
 else
     echo "FATAL: .env file not found. Please run the GitLab setup scripts first. Exiting."
     exit 1
@@ -34,7 +35,7 @@ echo "   - Using GitLab User: $GITLAB_USER"
 
 if ! command -v k3d &> /dev/null; then
     echo "--> Installing k3d..."
-    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash &> /dev/null
 else
     echo "--> k3d is already installed."
 fi
@@ -49,7 +50,7 @@ fi
 
 if ! k3d cluster get iot-cluster &> /dev/null; then
     echo "--> Creating k3d cluster 'iot-cluster'..."
-    k3d cluster create iot-cluster --port 8080:80@loadbalancer
+    k3d cluster create iot-cluster --port 8080:80@loadbalancer &> /dev/null
 else
     echo "--> k3d cluster 'iot-cluster' already exists."
 fi
@@ -59,7 +60,7 @@ export KUBECONFIG=$(k3d kubeconfig write iot-cluster)
 
 echo "--> Installing Argo CD..."
 kubectl create namespace $NAMESPACE || echo "Namespace 'argocd' already exists."
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml &> /dev/null
 
 
 kubectl patch configmap argocd-cm -n argocd --type merge -p '{"data":{"timeout.reconciliation":"60s"}}'
@@ -70,7 +71,7 @@ kubectl create secret generic private-repo-credentials \
   --namespace=argocd \
   --from-literal=username=$GITLAB_USER \
   --from-literal=password=$GITLAB_TOKEN \
-  --from-literal=url='http://10.14.58.20:9080/root/amounadi.git' 
+  --from-literal=url="http://$IP:9080/root/amounadi.git" 
 
 kubectl label secret private-repo-credentials \
   --namespace=argocd 'argocd.argoproj.io/secret-type=repository'
