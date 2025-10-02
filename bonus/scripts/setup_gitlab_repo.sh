@@ -74,6 +74,7 @@ echo "------------------------------------------------------------------"
 echo "                 PUSHING LOCAL REPO TO GITLAB"
 echo "------------------------------------------------------------------"
 # Get the SSH URL for the repository from the GitLab API
+ssh-keygen -R "[${IP_ADDRESS}]:${PORT_SSH}" 2>/dev/null || true
 
 
 SSH_URL_REPO=$(curl --silent --header "PRIVATE-TOKEN: ${TOKEN_GITLAB}" "${GITLAB_URL}/api/v4/projects/${PROJECT_ID}" \
