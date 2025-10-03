@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://10.14.58.20:9080/root/amounadi
+    repoURL: http://10.0.2.15:9080/root/amounadi
     targetRevision: HEAD
     path: .
   destination:
