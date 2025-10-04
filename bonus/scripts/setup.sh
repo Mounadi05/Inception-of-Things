@@ -14,11 +14,6 @@ SCRIPT_GITLAB="./setup_gitlab.sh"
 SCRIPT_GITLAB_REPO="./setup_gitlab_repo.sh"
 SCRIPT_K3D="./setup_k3d.sh"
 
-echo "=========================================================="
-echo "           🚀 Starting GitOps Environment Setup 🚀         "
-echo "=========================================================="
-echo ""
-
 echo "----------------------------------------------------------"
 echo "STAGE 1: Executing $SCRIPT_GITLAB (GitLab Docker & Initial ENV)"
 echo "----------------------------------------------------------"

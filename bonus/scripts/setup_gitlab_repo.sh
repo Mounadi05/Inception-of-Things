@@ -102,9 +102,9 @@ fi
 GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git remote set-url origin "${SSH_URL_REPO}" 2>/dev/null || GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git remote add origin "${SSH_URL_REPO}"
 GIT_SSH_COMMAND="ssh -i ${SSH_KEY_PATH} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git push -u origin main
 
-
-echo "✅ update configuration to $ENV_FILE"
-
+echo ""
+echo "✅ local repo pushed to GitLab successfully."
+echo ""
 cat <<EOF > $ENV_FILE
 # GitLab Configuration Saved on $(date)
 TOKEN_GITLAB=$TOKEN_GITLAB
@@ -119,4 +119,4 @@ echo "✅ Local directory '${LOCAL_REPO_DIR}' successfully pushed to GitLab."
 echo ""
 echo "Token: ${TOKEN_GITLAB}"
 echo ""
-echo "🎉 GitLab setup complete!"
+echo "GitLab setup complete!"

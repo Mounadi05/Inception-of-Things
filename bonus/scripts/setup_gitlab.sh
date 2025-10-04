@@ -3,7 +3,7 @@
 set -e
 
 echo ""
-echo "🎉 GitLab is starting up! Initialization can take 5-10 minutes."
+echo "  GitLab is starting up! Initialization can take 5-10 minutes."
 echo "------------------------------------------------------------------"
 echo "                      ✅ EXTRA INFO & NEXT STEPS"
 echo "------------------------------------------------------------------"
