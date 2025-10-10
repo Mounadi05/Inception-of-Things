@@ -14,7 +14,6 @@ Automated Kubernetes environments for 42's Inception-of-Things journey, spanning
 - [How It All Fits Together](#how-it-all-fits-together)
 - [Verification & Tear Down](#verification--tear-down)
 - [Troubleshooting](#troubleshooting)
-- [Next Steps](#next-steps)
 - [Resources](#resources)
 
 ## Project Overview
@@ -172,12 +171,6 @@ Key subdirectories:
 - **Argo CD login fails:** Ensure the port-forwarding process is still running (`ps aux | grep argocd-server`). Re-run the script if needed.
 - **Permission errors:** Run the scripts from a user that can execute `docker` without `sudo`, or prepend `sudo` where appropriate.
 - **Idempotency:** Rerunning scripts is mostly safe; when in doubt, clean previous clusters/containers before re-executing.
-
-## Next Steps
-- Replace sample manifests with your own workloads and adjust ingress hosts.
-- Integrate TLS certificates via cert-manager or Traefik for realistic ingress scenarios.
-- Extend the Ansible playbook (Part 2) with observability tooling (Prometheus, Grafana).
-- Automate smoke tests post-deployment using GitLab CI or GitHub Actions.
 
 ## Resources
 - [k3s Documentation](https://docs.k3s.io/)
